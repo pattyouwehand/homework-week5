@@ -3,9 +3,9 @@ const app = express()
 const bodyParser = require('body-parser')
 const port = 3000
 
-const loggingMiddleware = (req, res, next) => {
-  if(!req.body || ''){ 
-    res.status(404).end
+const validation = (req, res, next) => {
+  if(!req.body || req.body === ''){ 
+    res.status(400).json({ message: 'Invalid input' })
   }else{
     next()
   }
@@ -13,16 +13,18 @@ const loggingMiddleware = (req, res, next) => {
 
 let maxResponse = 0
 const maxResponseMiddelware = (req, res, next) => {
+  maxResponse = maxResponse + 1
   if(maxResponse > 5){
-    res.status(404).send("Too Many Requests")
+    res.status(429).end()
   }else{
     next()
   }
 }
 
-app.use(bodyParser.json())
-app.post('/messages', maxResponseMiddelware, loggingMiddleware, (req, res) => {
-  console.log(req.body)
+app.post('/messages', maxResponseMiddelware, (req, res) => {
   res.json({ message: "Message received loud and clear" })
 })
+
+app.use(validation)
+app.use(bodyParser.json())
 app.listen(port, () => console.log(`Listening on port ${port}`))

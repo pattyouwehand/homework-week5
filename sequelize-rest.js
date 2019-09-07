@@ -56,7 +56,7 @@ router.get(
     Movie
     .findAll()
     .then(movieList => res.json(movieList))
-    .catch(next)
+    .catch(err => next(err))
 })
 
 router.post(
@@ -65,7 +65,7 @@ router.post(
     Movie
     .create(req.body)
     .then(movie => res.json(movie))
-    .catch(next)
+    .catch(err => next(err))
 })
 
 router.get(
@@ -74,7 +74,7 @@ router.get(
     Movie
     .findByPk(req.params.id)
     .then(movieId => res.json(movieId))
-    .catch(next) 
+    .catch(err => next(err)) 
 })
 
 router.put(
@@ -84,7 +84,7 @@ router.put(
     .findByPk(req.params.id)
     .then(movie => movie.update(req.body))
     .then(movie => res.json(movie))
-    .catch(next)
+    .catch(err => next(err))
 })
 
 router.delete(
@@ -93,7 +93,7 @@ router.delete(
     Movie
     .destroy({ where : { id: req.params.id}})
     .then(number => res.json({ deleted: number}))
-    .catch(next)
+    .catch(err => next(err))
 })
 
 router.get(
@@ -108,7 +108,7 @@ router.get(
       .findAndCountAll({ limit, offset })
       .then(movies => res.send({ movies, total }))
     })  
-    .catch(next)
+    .catch(err => next(err))
 })
 
 app.use(bodyParser.json())
