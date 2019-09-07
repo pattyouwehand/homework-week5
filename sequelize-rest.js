@@ -14,6 +14,6 @@ const Movie = sequelize.define(
 { synopsis: {
   type: sequelize.TEXT,
   field: 'synopsis'
-}}
+}})
 
-)
+sequelize.sync()
