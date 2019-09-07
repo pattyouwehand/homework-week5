@@ -81,6 +81,25 @@ router.get(
     .catch(err => next(err)) 
 })
 
+router.put(
+  '/movies/:id',
+  (req, res, next) => {
+    Movie
+    .findByPk(req.params.id)
+    .then(movie => movie.update(req.body))
+    .then(movie => res.json(movie))
+    .catch(err => next(err))
+})
+
+router.delete(
+  '/movies/:id',
+  (req, res, next) => {
+    Movie
+    .destroy({ where : { id: req.params.id}})
+    .then(number => res.json({ deleted: number}))
+    .catch(err => next(err))
+})
+
 
 app.use(bodyParser.json())
 app.use(router)
