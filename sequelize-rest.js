@@ -50,17 +50,13 @@ sequelize
   ]))
   .catch(console.error)
 
-//router.get('/test', (req, res) => res.send('Hello World!'))
-//router.get('/echo', (req, res) => res.send(req.body))
-//router.get('/', (req, res) => res.redirect('/movies'))
-
 router.get(
   '/movies', 
   (req, res, next) => {
     Movie
     .findAll()
     .then(movieList => res.json(movieList))
-    .catch(err => next(err))
+    .catch(next)
 })
 
 router.post(
@@ -69,7 +65,7 @@ router.post(
     Movie
     .create(req.body)
     .then(movie => res.json(movie))
-    .catch(err => next(err))
+    .catch(next)
 })
 
 router.get(
@@ -78,7 +74,7 @@ router.get(
     Movie
     .findByPk(req.params.id)
     .then(movieId => res.json(movieId))
-    .catch(err => next(err)) 
+    .catch(next) 
 })
 
 router.put(
@@ -88,7 +84,7 @@ router.put(
     .findByPk(req.params.id)
     .then(movie => movie.update(req.body))
     .then(movie => res.json(movie))
-    .catch(err => next(err))
+    .catch(next)
 })
 
 router.delete(
@@ -97,9 +93,23 @@ router.delete(
     Movie
     .destroy({ where : { id: req.params.id}})
     .then(number => res.json({ deleted: number}))
-    .catch(err => next(err))
+    .catch(next)
 })
 
+router.get(
+  '/read-all',
+  (req, res, next) => {
+    const limit = req.query.limit || 25
+    const offset = req.query.offset || 0
+
+    Movie
+    .count()
+    .then(total => { Movie
+      .findAndCountAll({ limit, offset })
+      .then(movies => res.send({ movies, total }))
+    })  
+    .catch(next)
+})
 
 app.use(bodyParser.json())
 app.use(router)
