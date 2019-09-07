@@ -63,6 +63,15 @@ router.get(
     .catch(err => next(err))
 })
 
+router.post(
+  '/movies',
+  (req, res, next) => {
+    Movie
+    .create(req.body)
+    .then(movie => res.json(movie))
+    .catch(err => next(err))
+  }
+)
 
 
 app.use(bodyParser.json())
