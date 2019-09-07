@@ -9,7 +9,7 @@ const { Router } = require('express')
 const router = new Router
 
 const Movie = sequelize.define(
-  'movie', 
+  'movies', 
   { title: { 
       type: Sequelize.TEXT,
       field: 'movie_name' }
@@ -50,9 +50,21 @@ sequelize
   ]))
   .catch(console.error)
 
-router.get('/test', (req, res) => res.send('Hello World!'))
+//router.get('/test', (req, res) => res.send('Hello World!'))
+//router.get('/echo', (req, res) => res.send(req.body))
+//router.get('/', (req, res) => res.redirect('/movies'))
+
+router.get(
+  '/movies', 
+  (req, res, next) => {
+    Movie
+    .findAll()
+    .then(movieList => res.json(movieList))
+    .catch(err => next(err))
+})
 
 
-app.use(router)
+
 app.use(bodyParser.json())
+app.use(router)
 app.listen(port, () => console.log(`listening on port ${port}!`))
