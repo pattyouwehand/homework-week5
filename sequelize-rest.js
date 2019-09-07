@@ -70,8 +70,16 @@ router.post(
     .create(req.body)
     .then(movie => res.json(movie))
     .catch(err => next(err))
-  }
-)
+})
+
+router.get(
+  '/movies/:id',
+  (req, res, next) => {
+    Movie
+    .findByPk(req.params.id)
+    .then(movieId => res.json(movieId))
+    .catch(err => next(err)) 
+})
 
 
 app.use(bodyParser.json())
